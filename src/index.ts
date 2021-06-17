@@ -1,13 +1,7 @@
-import { readFileSync } from "fs";
-import { createServer } from "https";
 import WebSocket, { Server } from "ws";
 import { Message } from "./messages";
 
-const https = createServer({
-  cert: readFileSync("/etc/letsencrypt/live/wsp.submerge.run/fullchain.pem"),
-  key: readFileSync("/etc/letsencrypt/live/wsp.submerge.run/privkey.pem"),
-});
-const server = new Server({ server: https });
+const server = new Server({ port: parseInt(process.env.PORT || "5000") });
 
 var masterSocket: WebSocket | undefined;
 var slaveSockets: Map<string, WebSocket> = new Map();
@@ -53,5 +47,3 @@ server.on("connection", (socket) => {
     }
   });
 });
-
-https.listen(443);
