@@ -1,9 +1,16 @@
-import ws from "ws";
+import { readFileSync } from "fs";
+import { createServer } from "https";
+import WebSocket, { Server } from "ws";
 import { Message } from "./messages";
 
-const server = new ws.Server({ port: parseInt(process.env.PORT || "5000") });
-var masterSocket: ws | undefined;
-var slaveSockets: Map<string, ws> = new Map();
+const https = createServer({
+  cert: readFileSync("/etc/letsencrypt/live/wsp.submerge.run/fullchain.pem"),
+  key: readFileSync("/etc/letsencrypt/live/wsp.submerge.run/privkey.pem"),
+});
+const server = new Server({ server: https });
+
+var masterSocket: WebSocket | undefined;
+var slaveSockets: Map<string, WebSocket> = new Map();
 
 server.on("connection", (socket) => {
   let isAlive = true;
@@ -46,3 +53,5 @@ server.on("connection", (socket) => {
     }
   });
 });
+
+https.listen(443);
