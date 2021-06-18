@@ -33,14 +33,14 @@ server.on("connection", (socket) => {
       if (masterSocket) return socket.close(4001, "Master already registered");
       role = "master";
       masterSocket = socket;
-    } else if (data.type === 0 && data.from === "slave" && data.id) {
-      id = data.id;
+    } else if (data.type === 0 && data.from === "slave" && data.sessionId) {
+      id = data.sessionId;
       role = "slave";
       slaveSockets.set(id, socket);
-    } else if (role === "slave" && data.id) {
+    } else if (role === "slave" && data.sessionId) {
       masterSocket?.send(data);
-    } else if (role === "master" && data.id) {
-      const socket = slaveSockets.get(data.id);
+    } else if (role === "master" && data.sessionId) {
+      const socket = slaveSockets.get(data.sessionId);
       socket?.send(rawData);
     } else {
       socket.close(4000, "Invalid data");

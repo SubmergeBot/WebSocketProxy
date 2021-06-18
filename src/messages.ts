@@ -1,5 +1,5 @@
 export type Message = {
-  id?: string;
+  sessionId?: string;
   type?: number;
   from: "master" | "slave";
 };
