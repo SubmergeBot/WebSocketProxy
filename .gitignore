@@ -1,4 +1,9 @@
+# Code Editors
+.nova
+.vscode
+
+# TS/JS/NPM
 node_modules
 dist
+
 .env
-.nova
